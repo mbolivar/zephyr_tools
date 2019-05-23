@@ -357,11 +357,13 @@ class ZephyrRepoAnalyzer:
         '''Commits in `upstream_ref` history since merge base with
         `downstream_ref`'''
         try:
-            downstream_oid = self.repo.revparse_single(self.downstream_ref).oid
+            downstream_oid = self.repo.revparse_single(self.downstream_ref +
+                                                       '^{commit}').oid
         except KeyError:
             raise NoSuchDownstream(self.downstream_ref)
         try:
-            upstream_oid = self.repo.revparse_single(self.upstream_ref).oid
+            upstream_oid = self.repo.revparse_single(self.upstream_ref +
+                                                     '^{commit}').oid
         except KeyError:
             raise NoSuchUpstream(self.upstream_ref)
 
