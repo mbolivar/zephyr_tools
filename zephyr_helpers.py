@@ -367,7 +367,12 @@ class ZephyrRepoAnalyzer:
         except KeyError:
             raise NoSuchUpstream(self.upstream_ref)
 
-        merge_base = self.repo.merge_base(downstream_oid, upstream_oid)
+        try:
+            merge_base = self.repo.merge_base(downstream_oid, upstream_oid)
+        except ValueError:
+            print("can't find merge base; downstream_oid={}, upstream_oid={}".
+                  format(downstream_oid, upstream_oid), file=sys.stderr)
+            raise
 
         sort = pygit2.GIT_SORT_TOPOLOGICAL | pygit2.GIT_SORT_REVERSE
         walker = self.repo.walk(upstream_oid, sort)
